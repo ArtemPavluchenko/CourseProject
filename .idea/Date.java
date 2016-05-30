@@ -12,7 +12,7 @@ class DataOfSmartphone implements Serializable{
 	private int ram;
 	private int hdd;
 	private boolean wifi;
-	private String battery;
+	private int battery;
 	private boolean camera;
 	private int numOfSIM;
 
@@ -48,7 +48,7 @@ class DataOfSmartphone implements Serializable{
 		this.wifi = wifi;
 	}
 
-	public void setBattery(String battery) {
+	public void setBattery(int battery) {
 		this.battery = battery;
 	}
 
@@ -85,7 +85,7 @@ class DataOfLaptop implements Serializable{
 	private int ram;
 	private int hdd;
 	private boolean wifi;
-	private String battery;
+	private int battery;
 	private boolean opticalDrive;
 	private String graphicCard;
 
@@ -121,7 +121,7 @@ class DataOfLaptop implements Serializable{
 		this.wifi = wifi;
 	}
 
-	public void setBattery(String battery) {
+	public void setBattery(int battery) {
 		this.battery = battery;
 	}
 
@@ -157,7 +157,7 @@ class Creator extends SmartphoneGenerator {
 		DataOfSmartphone obj = new DataOfSmartphone();
 		for (int i=0; i < 1;i++) {
 			obj.setId(generateId());
-			obj.setNumOfProduct(generateNumOfProduct());
+			obj.setNumOfProduct(generatePrice());
 			obj.setName(generateName());
 			obj.setManufacturedCompany(generateManufacturedCompany());
 			obj.setProcessor(generateProcessor());
@@ -177,7 +177,7 @@ class Creator extends SmartphoneGenerator {
 		DataOfLaptop obj1 = new DataOfLaptop();
 		for (int i=0; i < 1;i++) {
 			obj1.setId(gen.generateId());
-			obj1.setNumOfProduct(gen.generateNumOfProduct());
+			obj1.setNumOfProduct(gen.generatePrice());
 			obj1.setName(gen.generateName());
 			obj1.setManufacturedCompany(gen.generateManufacturedCompany());
 			obj1.setProcessor(gen.generateProcessor());
@@ -197,7 +197,7 @@ class Creator extends SmartphoneGenerator {
 		DataOfSmartphone obj = new DataOfSmartphone();
 		
 		obj.setId(generateId());
-		obj.setNumOfProduct(generateNumOfProduct());
+		obj.setNumOfProduct(generatePrice());
 		obj.setName(generateName());
 		obj.setManufacturedCompany(generateManufacturedCompany());
 		obj.setProcessor(generateProcessor());
@@ -302,7 +302,7 @@ public class Date {
 		for (int i=0; i < 10; i++) {
 			DataOfLaptop laptop = new DataOfLaptop();
 			laptop.setId(gen.generateId());
-			laptop.setNumOfProduct(gen.generateNumOfProduct());
+			laptop.setNumOfProduct(gen.generatePrice());
 			laptop.setName(gen.generateName());
 			laptop.setManufacturedCompany(gen.generateManufacturedCompany());
 			laptop.setProcessor(gen.generateProcessor());
