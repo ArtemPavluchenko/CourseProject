@@ -235,11 +235,10 @@ class Laptop extends PortableEquipment {
 }
 ////////////////////////////////////////////////////////////////////////////
 class DataBaseCreater {
-	List<Product> data = new ArrayList<>();
-	
-	public List<Product> createDB(int numOfLaptops,int numOfSmartphones) {
+
+	public List<Laptop> createLaptopsDB(int numOfLaptops) {
+		List<Laptop> data = new ArrayList<>();
 		LaptopGenerator gen = new LaptopGenerator();
-		SmartphoneGenerator gen1 = new SmartphoneGenerator();
 		
 		for (int i=0; i < numOfLaptops; i++) {
 			Laptop obj1 = new Laptop();
@@ -253,9 +252,15 @@ class DataBaseCreater {
 			obj1.setBattery(gen.generateBattery());
 			obj1.setOpticalDrive(gen.generateOpticalDrive());
 			obj1.setGraphicCard(gen.generateGraphicCard());
-			
+
 			data.add(obj1);
 		}
+		return data;
+	}
+	
+	public List<Smartphone> greateSmartphonesDB(int numOfSmartphones) {
+		List<Smartphone> data = new ArrayList<>();
+		SmartphoneGenerator gen1 = new SmartphoneGenerator();
 		
 		for (int i=0; i < numOfSmartphones; i++) {
 			Smartphone obj1 = new Smartphone();
@@ -274,8 +279,16 @@ class DataBaseCreater {
 		}
 		return data;
 	}
+
+	public List<Product> createProductsDB(int numOfLaptops,int numOfSmartphones) {
+		List<Product> data = new ArrayList<>();
+		data.addAll(greateSmartphonesDB(numOfSmartphones));
+		data.addAll(createLaptopsDB(numOfLaptops));
+
+		return data;
+	}
 	
-	public void serializator(List<Product>data) {
+	public void serializator(List data) {
 		String filePath = "/storage/emulated/0/AppProjects/CourseProject/src/File.data";
 		File file = new File(filePath);
 		ObjectOutputStream outstream = null;
@@ -302,14 +315,14 @@ class DataBaseCreater {
 		}
 	}
 
-	public List<Product> deserializator() throws InvalidObjectException {
+	public List<Laptop> deserializator() throws InvalidObjectException {
 		String filePath = "/storage/emulated/0/AppProjects/CourseProject/src/File.data";
 		File file = new File(filePath);
 		ObjectInputStream objectInputStream = null;
 		try {
 			FileInputStream fileInputStream = new FileInputStream(file);
 			objectInputStream = new ObjectInputStream(fileInputStream);
-			List<Product> data = (List<Product>) objectInputStream.readObject();
+			List<Laptop>  data = (List<Laptop>) objectInputStream.readObject();
 			return data;
 		} catch (ClassNotFoundException e) {
 			System.err.println("Class not found");
@@ -368,42 +381,42 @@ enum Criterions {
 	HDD,
 	BATTERY,
 	CAMERA,
-	NUMOFSIM,
-	OD,
-	GC;
+	NUM_OF_SIM,
+	OPTICAL_DRIVE,
+	GRAPHIC_CARD;
 }
 
 class CriterionsSorted {
 
-	private static Comparator<Laptop> comparatorByCompany = new Comparator<Laptop>() {
+	private static Comparator<Laptop> lComparatorByCompany = new Comparator<Laptop>() {
 		@Override
 		public int compare(Laptop o1, Laptop o2) {
 			return o1.getManufacturedCompany().compareTo(o2.getManufacturedCompany());
 		}
 	};
 
-	private static Comparator<Laptop> comparatorByCPU = new Comparator<Laptop>() {
+	private static Comparator<Laptop> lComparatorByCPU = new Comparator<Laptop>() {
 		@Override
 		public int compare(Laptop o1, Laptop o2) {
 			return o1.getProcessor().compareTo(o2.getProcessor());
 		}
 	};
 
-	private static Comparator<Laptop> comparatorByOS = new Comparator<Laptop>() {
+	private static Comparator<Laptop> lComparatorByOS = new Comparator<Laptop>() {
 		@Override
 		public int compare(Laptop o1, Laptop o2) {
 			return o1.getOS().compareTo(o2.getOS());
 		}
 	};
 
-	private static Comparator<Laptop> comparatorByGraphicCard = new Comparator<Laptop>() {
+	private static Comparator<Laptop> lComparatorByGraphicCard = new Comparator<Laptop>() {
 		@Override
 		public int compare(Laptop o1, Laptop o2) {
 			return o1.getGraphicCard().compareTo(o2.getGraphicCard());
 		}
 	};
 
-	private static Comparator<Laptop> comparatorByPrice = new Comparator<Laptop>() {
+	private static Comparator<Laptop> lComparatorByPrice = new Comparator<Laptop>() {
 		@Override
 		public int compare(Laptop o1, Laptop o2) {
 			if (o1.getPrice() > o2.getPrice()) {
@@ -416,7 +429,7 @@ class CriterionsSorted {
 		}
 	};
 
-	private static Comparator<Laptop> comparatorByRAM = new Comparator<Laptop>() {
+	private static Comparator<Laptop> lComparatorByRAM = new Comparator<Laptop>() {
 		@Override
 		public int compare(Laptop o1, Laptop o2) {
 			if (o1.getRam() > o2.getRam()) {
@@ -429,7 +442,7 @@ class CriterionsSorted {
 		}
 	};
 
-	private static Comparator<Laptop> comparatorByHDD = new Comparator<Laptop>() {
+	private static Comparator<Laptop> lComparatorByHDD = new Comparator<Laptop>() {
 		@Override
 		public int compare(Laptop o1, Laptop o2) {
 			if (o1.getHdd() > o2.getHdd()) {
@@ -442,7 +455,7 @@ class CriterionsSorted {
 		}
 	};
 
-	private static Comparator<Laptop> comparatorByBattery = new Comparator<Laptop>() {
+	private static Comparator<Laptop> lComparatorByBattery = new Comparator<Laptop>() {
 		@Override
 		public int compare(Laptop o1, Laptop o2) {
 			if (o1.getBarrety() > o2.getBarrety()) {
@@ -455,12 +468,12 @@ class CriterionsSorted {
 		}
 	};
 
-	private static Comparator<Laptop> comparatorByOpticalDrive = new Comparator<Laptop>() {
+	private static Comparator<Laptop> lComparatorByOpticalDrive = new Comparator<Laptop>() {
 		@Override
 		public int compare(Laptop o1, Laptop o2) {
-			if (o1.getOpticalDrive() == true && o2.getOpticalDrive() == false) {
+			if (o1.getOpticalDrive() == false && o2.getOpticalDrive() == true) {
 				return 1;
-			} else if (o1.getOpticalDrive() == false && o2.getOpticalDrive() == true) {
+			} else if (o1.getOpticalDrive() == true && o2.getOpticalDrive() == false) {
 				return -1;
 			} else {
 				return 0;
@@ -468,25 +481,30 @@ class CriterionsSorted {
 		}
 	};
 
-	public static void LaptopSorted(List<Laptop> dataBase, Criterions criterion) {
+
+
+	public static void LaptopSorted(List dataBase, Criterions criterion) {
+
+
+
 		if (criterion == Criterions.COMPANY) {
-			Collections.sort(dataBase, comparatorByCompany);
+			Collections.sort(dataBase, lComparatorByCompany);
 		} else if (criterion == Criterions.CPU) {
-			Collections.sort(dataBase, comparatorByCPU);
+			Collections.sort(dataBase, lComparatorByCPU);
 		} else if (criterion == Criterions.PRICE) {
-			Collections.sort(dataBase, comparatorByPrice);
+			Collections.sort(dataBase, lComparatorByPrice);
 		} else  if (criterion == Criterions.RAM) {
-			Collections.sort(dataBase, comparatorByRAM);
+			Collections.sort(dataBase, lComparatorByRAM);
 		} else if (criterion == Criterions.HDD) {
-			Collections.sort(dataBase,comparatorByHDD);
+			Collections.sort(dataBase,lComparatorByHDD);
 		} else if (criterion == Criterions.OS) {
-			Collections.sort(dataBase, comparatorByOS);
+			Collections.sort(dataBase, lComparatorByOS);
 		} else if (criterion == Criterions.BATTERY) {
-			Collections.sort(dataBase, comparatorByBattery);
-		} else  if (criterion == Criterions.OD) {
-			Collections.sort(dataBase, comparatorByOpticalDrive);
-		} else if (criterion == Criterions.GC) {
-			Collections.sort(dataBase, comparatorByGraphicCard);
+			Collections.sort(dataBase, lComparatorByBattery);
+		} else  if (criterion == Criterions.OPTICAL_DRIVE) {
+			Collections.sort(dataBase, lComparatorByOpticalDrive);
+		} else if (criterion == Criterions.GRAPHIC_CARD) {
+			Collections.sort(dataBase, lComparatorByGraphicCard);
 		}
 	}
 
@@ -499,35 +517,32 @@ class CriterionsSorted {
 
 ////////////////////////////////////////////////////////////////////////////
 public class Base {
-
-	public static void printList(List<Product> data) {
-		for (Product a : data) {
+	
+	public static void printList(List<Laptop> data) {
+		for (Laptop a : data) {
 			System.out.println(a.toString());
 		}
 	}
-
+	
 	public static void main(String[] args) throws InvalidObjectException {
 		DataBaseCreater obj = new DataBaseCreater();
-		List<Product> data = obj.createDB(5, 5);
+		List<Laptop> data = obj.createLaptopsDB(5);
+		System.out.println(data.get(0).getClass());
+		Laptop oble = new Laptop();
 
-		obj.serializator(data);
-		printList(data);
-		
-		System.out.println("//////////////////////////////////////");
-		
-		List<Product> deserializableData = obj.deserializator();
-		printList(deserializableData);
-
-		Product a =  deserializableData.get(0);
-		
-		System.out.println(a.toString());
-		
-		System.out.println("//////////////////////////////////////");
-		
-		printList(deserializableData);
-		
-		
-
-
+		if (data.get(0).getClass() == oble.getClass()) {
+			System.out.println(1);
+		}
+//		obj.serializator(data);
+//		printList(data);
+//
+//		System.out.println("//////////////////////////////////////");
+//
+//		List<Laptop> deserializableData = obj.deserializator();
+//		printList(deserializableData);
+//
+//		CriterionsSorted.LaptopSorted(deserializableData, Criterions.OPTICAL_DRIVE);
+//		System.out.println("//////////////////////////////////////");
+//		printList(deserializableData);
 	}
 }
